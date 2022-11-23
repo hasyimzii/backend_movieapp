@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 // Movie
 Route::prefix('movie')->group(function () {
     Route::get('/', [MovieController::class, 'index'])->name('index');
+    Route::post('/search', [MovieController::class, 'search'])->name('search');
     Route::post('/create', [MovieController::class, 'create'])->name('create');
     Route::post('/update', [MovieController::class, 'update'])->name('update');
     Route::post('/delete', [MovieController::class, 'delete'])->name('delete');

@@ -24,6 +24,7 @@ class MovieController extends Controller
             $data = [];
             foreach ($movie as $item) {
                 $data[] = [
+                    'id' => $item->id,
                     'title' => $item->title,
                     'director' => $item->director,
                     'year' => $item->year,
@@ -31,15 +32,59 @@ class MovieController extends Controller
                     'runtime' => $item->runtime,
                     'age' => $item->age,
                     'genre' => $item->genre,
-                    'cast' => $item->cast,
                     'description' => $item->description,
                     'url' => $item->url,
                     'image' => $url . $item->image,
                 ];
             }
-            return response()->json(['data' => $data], 200);
+            return response()->json([
+                'data' => $data,
+                'message' => '',
+            ], 200);
         } else {
-            return response()->json(['data' => null], 404);
+            return response()->json(['data' => null,
+            'message' => 'Data tidak ditemukan',
+        ], 404);
+        }
+    }
+
+    /**
+     * Search listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $url = env('APP_URL');
+        $movie = Movie::where('title', 'LIKE', "%{$request->title}%")->orderBy('created_at', 'desc')->get();
+
+        // check if not empty
+        if (!$movie->isEmpty()) {
+            $data = [];
+            foreach ($movie as $item) {
+                $data[] = [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'director' => $item->director,
+                    'year' => $item->year,
+                    'rating' => $item->rating,
+                    'runtime' => $item->runtime,
+                    'age' => $item->age,
+                    'genre' => $item->genre,
+                    'description' => $item->description,
+                    'url' => $item->url,
+                    'image' => $url . $item->image,
+                ];
+            }
+            return response()->json([
+                'data' => $data,
+                'message' => '',
+            ], 200);
+        } else {
+            return response()->json(['data' => null,
+            'message' => 'Data tidak ditemukan',
+        ], 404);
         }
     }
 
@@ -67,13 +112,15 @@ class MovieController extends Controller
             'runtime' => $request->runtime,
             'age' => $request->age,
             'genre' => $request->genre,
-            'cast' => $request->cast,
             'description' => $request->description,
             'url' => $request->url,
             'image' => $fileName,
         ];
         $movie = Movie::create($dataCreate);
-        return response()->json(['message' => 'Berhasil menambah data film'], 200);
+        return response()->json([
+            'data' => null,
+            'message' => 'Berhasil menambah data film',
+        ], 200);
     }
 
     /**
@@ -102,13 +149,15 @@ class MovieController extends Controller
             'runtime' => $request->runtime,
             'age' => $request->age,
             'genre' => $request->genre,
-            'cast' => $request->cast,
             'description' => $request->description,
             'url' => $request->url,
             'image' => $fileName,
         ];
         $movie->update($dataUpdate);
-        return response()->json(['message' => 'Berhasil mengubah data film'], 200);
+        return response()->json([
+            'data' => null,
+            'message' => 'Berhasil mengubah data film',
+        ], 200);
     }
 
     /**
@@ -120,10 +169,16 @@ class MovieController extends Controller
     public function delete(Request $request)
     {
         $movie = Movie::findOrFail($request->id);
-        if($movie->get()->isEmpty()){
-            return response()->json(['message' => 'Gagal mengubah data film'], 500);
+        if ($movie->get()->isEmpty()) {
+            return response()->json([
+                'data' => null,
+                'message' => 'Gagal mengubah data film',
+            ], 500);
         }
         $movie->delete();
-        return response()->json(['message' => 'Berhasil mengubah data film'], 200);
-    }    
+        return response()->json([
+            'data' => null,
+            'message' => 'Berhasil mengubah data film',
+        ], 200);
+    }
 }

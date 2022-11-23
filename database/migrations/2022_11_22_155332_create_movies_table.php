@@ -22,7 +22,6 @@ class CreateMoviesTable extends Migration
             $table->string('runtime');
             $table->string('age');
             $table->string('genre');
-            $table->string('cast');
             $table->text('description');
             $table->text('url')->nullable();
             $table->char('image');
