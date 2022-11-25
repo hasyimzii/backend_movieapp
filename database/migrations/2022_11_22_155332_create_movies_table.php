@@ -20,7 +20,7 @@ class CreateMoviesTable extends Migration
             $table->string('year');
             $table->float('rating');
             $table->string('runtime');
-            $table->string('age');
+            $table->enum('age', ['All', '7+', '13+', '16+', '18+']);
             $table->string('genre');
             $table->text('description');
             $table->text('url')->nullable();
