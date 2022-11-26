@@ -51,6 +51,18 @@ class MovieSeeder extends Seeder
                 'url' => 'https://youtu.be/7d_jQycdQGo',
                 'image' => 'uploads\movie\whiplash.jpg',
             ],
+            [
+                'title' => 'Toy Story',
+                'director' => 'John Lasseter',
+                'year' => '1995',
+                'rating' => 8.3,
+                'runtime' => '1h 21m',
+                'age' => '7+',
+                'genre' => 'Adventure, Comedy',
+                'description' => 'A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy\'s bedroom.',
+                'url' => 'https://youtu.be/v-PjgYDrg70',
+                'image' => 'uploads\movie\toystory.jpg',
+            ],
         ];
         foreach ($movie as $item) {
             Movie::create($item);
