@@ -151,7 +151,7 @@ class MovieController extends Controller
             'genre' => $request->genre,
             'description' => $request->description,
             'url' => $request->url,
-            'image' => $fileName,
+            'image' => isset($fileName) ?  $fileName : $request->old_image,
         ];
         $movie->update($dataUpdate);
         return response()->json([
