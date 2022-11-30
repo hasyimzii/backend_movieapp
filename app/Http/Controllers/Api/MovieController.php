@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Movie;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Throwable;
 
 class MovieController extends Controller
 {
@@ -116,11 +117,18 @@ class MovieController extends Controller
             'url' => $request->url,
             'image' => $fileName,
         ];
-        $movie = Movie::create($dataCreate);
-        return response()->json([
-            'data' => null,
-            'message' => 'Berhasil menambah data film',
-        ], 200);
+        try {
+            $movie = Movie::create($dataCreate);
+            return response()->json([
+                'data' => null,
+                'message' => 'Berhasil menambah data film',
+            ], 200);
+        } catch (Throwable $e) {
+            return response()->json([
+                'data' => null,
+                'message' => 'Gagal menambah data film',
+            ], 200);
+        }
     }
 
     /**
@@ -153,11 +161,18 @@ class MovieController extends Controller
             'url' => $request->url,
             'image' => isset($fileName) ?  $fileName : $request->old_image,
         ];
-        $movie->update($dataUpdate);
-        return response()->json([
-            'data' => null,
-            'message' => 'Berhasil mengubah data film',
-        ], 200);
+        try {
+            $movie->update($dataUpdate);
+            return response()->json([
+                'data' => null,
+                'message' => 'Berhasil mengubah data film',
+            ], 200);
+        } catch (Throwable $e) {
+            return response()->json([
+                'data' => null,
+                'message' => 'Gagal mengubah data film',
+            ], 200);
+        }
     }
 
     /**
