@@ -35,7 +35,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $item->getFirstMediaUrl(),
+                    'image' => $item->getFirstUrl('image')->getUrl(),
                 ];
             }
             return response()->json([
@@ -76,7 +76,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $item->getFirstMediaUrl(),
+                    'image' => $item->getFirstUrl('image')->getUrl(),
                 ];
             }
             return response()->json([
@@ -112,7 +112,7 @@ class MovieController extends Controller
         ];
         try {
             $movie = Movie::create($dataCreate);
-            $movie->addMediaFromRequest('image')->toMediaCollection();
+            $movie->addMediaFromRequest('image')->toMediaCollection('image');
 
             return response()->json([
                 'data' => null,
@@ -151,7 +151,7 @@ class MovieController extends Controller
             ];
 
             $movie->update($dataUpdate);
-            $movie->addMediaFromRequest('image')->toMediaCollection();
+            $movie->addMediaFromRequest('image')->toMediaCollection('image');
 
             return response()->json([
                 'data' => null,

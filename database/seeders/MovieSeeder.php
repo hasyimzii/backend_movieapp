@@ -69,7 +69,7 @@ class MovieSeeder extends Seeder
 
         for ($i = 0; $i < 4; $i++) {
             $model = Movie::create($movie[$i]);
-            $model->addMediaFromUrl($image[$i])->toMediaCollection();
+            $model->addMediaFromUrl($image[$i])->toMediaCollection('image');
         }
     }
 }
