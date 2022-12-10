@@ -35,7 +35,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $item->getFirstUrl('image')->getUrl(),
+                    'image' => $item->getFirstMedia('image')->getUrl(),
                 ];
             }
             return response()->json([
@@ -76,7 +76,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $item->getFirstUrl('image')->getUrl(),
+                    'image' => $item->getFirstMedia('image')->getUrl(),
                 ];
             }
             return response()->json([
