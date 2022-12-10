@@ -35,7 +35,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $url . $item->image,
+                    'image' => $item->getFirstMediaUrl(),
                 ];
             }
             return response()->json([
@@ -43,9 +43,10 @@ class MovieController extends Controller
                 'message' => '',
             ], 200);
         } else {
-            return response()->json(['data' => null,
-            'message' => 'Data tidak ditemukan',
-        ], 404);
+            return response()->json([
+                'data' => null,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
         }
     }
 
@@ -75,7 +76,7 @@ class MovieController extends Controller
                     'genre' => $item->genre,
                     'description' => $item->description,
                     'url' => $item->url,
-                    'image' => $url . $item->image,
+                    'image' => $item->getFirstMediaUrl(),
                 ];
             }
             return response()->json([
@@ -83,9 +84,10 @@ class MovieController extends Controller
                 'message' => '',
             ], 200);
         } else {
-            return response()->json(['data' => null,
-            'message' => 'Data tidak ditemukan',
-        ], 404);
+            return response()->json([
+                'data' => null,
+                'message' => 'Data tidak ditemukan',
+            ], 404);
         }
     }
 
@@ -97,14 +99,6 @@ class MovieController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->hasFile('image')) {
-            $uploadFile = $request->file('image');
-            $destinationPath = 'uploads/movie/'; // upload path
-            $fileName = date('YmdHis') . '-' . Str::random(15) . "." . $uploadFile->getClientOriginalExtension();
-            $uploadFile->move($destinationPath, $fileName);
-            $fileName = $destinationPath . $fileName;
-        }
-
         $dataCreate = [
             'title' => $request->title,
             'director' => $request->director,
@@ -115,10 +109,11 @@ class MovieController extends Controller
             'genre' => $request->genre,
             'description' => $request->description,
             'url' => $request->url,
-            'image' => $fileName,
         ];
         try {
             $movie = Movie::create($dataCreate);
+            $movie->addMediaFromRequest('image')->toMediaCollection();
+
             return response()->json([
                 'data' => null,
                 'message' => 'Berhasil menambah data film',
@@ -135,39 +130,34 @@ class MovieController extends Controller
      * Update a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $movie = Movie::findOrFail($request->id);
+        $movie = Movie::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            $uploadFile = $request->file('image');
-            $destinationPath = 'uploads/movie/'; // upload path
-            $fileName = date('YmdHis') . '-' . Str::random(15) . "." . $uploadFile->getClientOriginalExtension();
-            $uploadFile->move($destinationPath, $fileName);
-            $fileName = $destinationPath . $fileName;
-        }
+        if ($movie != null) {
+            $dataUpdate = [
+                'title' => $request->title,
+                'director' => $request->director,
+                'year' => $request->year,
+                'rating' => $request->rating,
+                'runtime' => $request->runtime,
+                'age' => $request->age,
+                'genre' => $request->genre,
+                'description' => $request->description,
+                'url' => $request->url,
+            ];
 
-        $dataUpdate = [
-            'title' => $request->title,
-            'director' => $request->director,
-            'year' => $request->year,
-            'rating' => $request->rating,
-            'runtime' => $request->runtime,
-            'age' => $request->age,
-            'genre' => $request->genre,
-            'description' => $request->description,
-            'url' => $request->url,
-            'image' => isset($fileName) ?  $fileName : $request->old_image,
-        ];
-        try {
             $movie->update($dataUpdate);
+            $movie->addMediaFromRequest('image')->toMediaCollection();
+
             return response()->json([
                 'data' => null,
                 'message' => 'Berhasil mengubah data film',
             ], 200);
-        } catch (Throwable $e) {
+        } else {
             return response()->json([
                 'data' => null,
                 'message' => 'Gagal mengubah data film',
@@ -178,12 +168,12 @@ class MovieController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
-        $movie = Movie::findOrFail($request->id);
+        $movie = Movie::findOrFail($id);
         if ($movie->get()->isEmpty()) {
             return response()->json([
                 'data' => null,

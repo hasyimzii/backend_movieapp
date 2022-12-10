@@ -25,7 +25,6 @@ class MovieSeeder extends Seeder
                 'genre' => 'Crime, Drama',
                 'description' => 'The aging patriarch of an organized crime dynasty in postwar New York City transfers control of his clandestine empire to his reluctant youngest son.',
                 'url' => 'https://youtu.be/UaVTIH8mujA',
-                'image' => 'uploads\movie\godfather.jpg',
             ],
             [
                 'title' => 'Spirited Away',
@@ -37,7 +36,6 @@ class MovieSeeder extends Seeder
                 'genre' => 'Fantasy, Adventure',
                 'description' => 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.',
                 'url' => 'https://youtu.be/ByXuk9QqQkk',
-                'image' => 'uploads\movie\spirited.jpg',
             ],
             [
                 'title' => 'Whiplash',
@@ -49,7 +47,6 @@ class MovieSeeder extends Seeder
                 'genre' => 'Drama, Music',
                 'description' => 'A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student\'s potential.',
                 'url' => 'https://youtu.be/7d_jQycdQGo',
-                'image' => 'uploads\movie\whiplash.jpg',
             ],
             [
                 'title' => 'Toy Story',
@@ -61,11 +58,18 @@ class MovieSeeder extends Seeder
                 'genre' => 'Adventure, Comedy',
                 'description' => 'A cowboy doll is profoundly threatened and jealous when a new spaceman action figure supplants him as top toy in a boy\'s bedroom.',
                 'url' => 'https://youtu.be/v-PjgYDrg70',
-                'image' => 'uploads\movie\toystory.jpg',
             ],
         ];
-        foreach ($movie as $item) {
-            Movie::create($item);
+        $image = [
+            'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_FMjpg_UX1000_.jpg',
+            'https://m.media-amazon.com/images/M/MV5BMjlmZmI5MDctNDE2YS00YWE0LWE5ZWItZDBhYWQ0NTcxNWRhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_FMjpg_UX1000_.jpg',
+            'https://m.media-amazon.com/images/M/MV5BOTA5NDZlZGUtMjAxOS00YTRkLTkwYmMtYWQ0NWEwZDZiNjEzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_FMjpg_UX1000_.jpg',
+            'https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_.jpg'
+        ];
+
+        for ($i = 0; $i < 4; $i++) {
+            $model = Movie::create($movie[$i]);
+            $model->addMediaFromUrl($image[$i])->toMediaCollection();
         }
     }
 }
