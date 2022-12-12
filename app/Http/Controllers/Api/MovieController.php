@@ -40,11 +40,9 @@ class MovieController extends Controller
             }
             return response()->json([
                 'data' => $data,
-                'message' => '',
             ], 200);
         } else {
             return response()->json([
-                'data' => null,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
@@ -81,11 +79,9 @@ class MovieController extends Controller
             }
             return response()->json([
                 'data' => $data,
-                'message' => '',
             ], 200);
         } else {
             return response()->json([
-                'data' => null,
                 'message' => 'Data tidak ditemukan',
             ], 404);
         }
@@ -115,14 +111,12 @@ class MovieController extends Controller
             $movie->addMediaFromRequest('image')->toMediaCollection('image');
 
             return response()->json([
-                'data' => null,
                 'message' => 'Berhasil menambah data film',
             ], 200);
         } catch (Throwable $e) {
             return response()->json([
-                'data' => null,
                 'message' => 'Gagal menambah data film',
-            ], 200);
+            ], 500);
         }
     }
 
@@ -151,17 +145,17 @@ class MovieController extends Controller
             ];
 
             $movie->update($dataUpdate);
-            $movie->addMediaFromRequest('image')->toMediaCollection('image');
+            if ($request->hasFile('image')) {
+                $movie->addMediaFromRequest('image')->toMediaCollection('image');
+            }
 
             return response()->json([
-                'data' => null,
                 'message' => 'Berhasil mengubah data film',
             ], 200);
         } else {
             return response()->json([
-                'data' => null,
                 'message' => 'Gagal mengubah data film',
-            ], 200);
+            ], 500);
         }
     }
 
@@ -176,13 +170,11 @@ class MovieController extends Controller
         $movie = Movie::findOrFail($id);
         if ($movie->get()->isEmpty()) {
             return response()->json([
-                'data' => null,
                 'message' => 'Gagal mengubah data film',
             ], 500);
         }
         $movie->delete();
         return response()->json([
-            'data' => null,
             'message' => 'Berhasil mengubah data film',
         ], 200);
     }
